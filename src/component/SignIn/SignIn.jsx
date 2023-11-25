@@ -3,6 +3,22 @@ import Navbar from "../../shared/Navbar";
 import { Link } from "react-router-dom";
 
 const SignIn = () => {
+
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    const form = e.target;
+    const name = form.name.value;
+    const file = form.file.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const marketing_accept = form.marketing_accept.value;
+    console.log(name, email, password, marketing_accept)
+    console.log(file)
+
+  }
+
+
   return (
     <div>
       <Navbar />
@@ -78,7 +94,7 @@ const SignIn = () => {
                   <div>
                     <h1 className="font-bold text-3xl text-center underline">Create an account</h1>
                   </div>
-                <form className="mt-8 grid  grid-cols-6 gap-6 mb-10">
+                <form onSubmit={handleSubmit} className="mt-8 grid  grid-cols-6 gap-6 mb-10">
                   <div className="col-span-6 sm:col-span-3">
                     <label
                       htmlFor="FirstName"
@@ -90,15 +106,13 @@ const SignIn = () => {
                     <input
                       type="text"
                       required
-                      id="FirstName"
-                      name="first_name"
+                      name="name"
                       className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
                     />
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
                     <label
-                      htmlFor="LastName"
                       className="block text-sm font-medium text-gray-700"
                     >
                       Profile Image
@@ -177,7 +191,7 @@ const SignIn = () => {
                   </div>
 
                   <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                    <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
+                    <button type="submit" className="btn btn-primary btn-outline">
                       Create an account
                     </button>
 
