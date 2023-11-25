@@ -75,10 +75,12 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1">{navbar}</ul>
       </div>
       <div className="navbar-end lg:mt-4">
-        <button className="btn btn-sm sm:btn-md bg-red-200">
-          <CiUser size={20}/>
-          Login/Sign In
-        </button>
+        <Link to="/signIn">
+          <button className="btn btn-sm sm:btn-md bg-red-200">
+            <CiUser size={20} />
+            Login/Sign In
+          </button>
+        </Link>
       </div>
     </div>
   );
