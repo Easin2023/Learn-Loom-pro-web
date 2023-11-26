@@ -1,23 +1,78 @@
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import Navbar from "../../shared/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import useProvider from "../../hooks/useProvider";
+import { imageUpload } from "../../hooks/imageUpload";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
+import { useState } from "react";
 
 const SignIn = () => {
+  const { signIn,updateUserProfile } = useProvider();
+  const [validation, setValidation] = useState('');
+  const axios = useAxiosSecure(); 
+  const location = useLoaderData();
+  const navigate = useNavigate();
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     const form = e.target;
     const name = form.name.value;
-    const file = form.file.value;
+    const image = form.image.files[0];
     const email = form.email.value;
     const password = form.password.value;
     const marketing_accept = form.marketing_accept.value;
-    console.log(name, email, password, marketing_accept)
-    console.log(file)
+    console.log({name, email, password, marketing_accept, image});
 
-  }
+    if(password.length < 6){
+      setValidation('Your password lens is less than six')
+      return
+    }
+    if(!/^(?=.*[A-Z])(?=.*[@$#!*&]).{8,}$/.test(password)){
+      setValidation('Your password does not contain any special characters or capital letters')
+      return ;
+    }
+    setValidation('');
 
+    
+    const imageUrl = await imageUpload(image);
+    const role = "user";
+
+    signIn(email, password)
+    .then(result => {
+      console.log(result.user);
+      updateUserProfile(name, imageUrl?.data?.display_url)
+      const userInfo = {
+        name,
+        email,
+        role
+      }
+      axios.put('/user', userInfo)
+      .then(res => {
+        if(res.status === 200){
+          Swal.fire({
+            title: `welcome ${name}`,
+            text: "Your login Success",
+            icon: "success"
+          });
+         return navigate('/')
+        }else{
+          Swal.fire({
+            title: `welcome ${name}`,
+            text: "Your login not a success find the problem",
+            icon: "error"
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+  };
 
   return (
     <div>
@@ -92,117 +147,125 @@ const SignIn = () => {
 
                 <div>
                   <div>
-                    <h1 className="font-bold text-3xl text-center underline">Create an account</h1>
-                  </div>
-                <form onSubmit={handleSubmit} className="mt-8 grid  grid-cols-6 gap-6 mb-10">
-                  <div className="col-span-6 sm:col-span-3">
-                    <label
-                      htmlFor="FirstName"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Name
-                    </label>
-
-                    <input
-                      type="text"
-                      required
-                      name="name"
-                      className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6 sm:col-span-3">
-                    <label
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Profile Image
-                    </label>
-
-                    <input
-                      type="file"
-                      required
-                      name="file"
-                      className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6">
-                    <label
-                      htmlFor="Email"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Email
-                    </label>
-
-                    <input
-                      type="email"
-                      id="Email"
-                      required
-                      name="email"
-                      className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6 sm:col-span-6">
-                    <label
-                      htmlFor="Password"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Password
-                    </label>
-
-                    <input
-                      type="password"
-                      id="Password"
-                      required
-                      name="password"
-                      className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6">
-                    <label htmlFor="MarketingAccept" className="flex gap-4">
-                      <input
-                        type="checkbox"
-                        name="marketing_accept"
-                        required
-                        className="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
-                      />
-
-                      <span className="text-sm text-gray-700">
-                        I want to receive emails about events, product updates
-                        and company announcements.
-                      </span>
-                    </label>
-                  </div>
-
-                  <div className="col-span-6">
-                    <p className="text-sm text-gray-500">
-                      By creating an account, you agree to our
-                      <a href="#" className="text-gray-700 underline">
-                        terms and conditions
-                      </a>
-                      and
-                      <a href="#" className="text-gray-700 underline">
-                        privacy policy
-                      </a>
-                      .
-                    </p>
-                  </div>
-
-                  <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                    <button type="submit" className="btn btn-primary btn-outline">
+                    <h1 className="font-bold text-3xl text-center underline">
                       Create an account
-                    </button>
-
-                    <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                      Already have an account?
-                      <Link to="/login">
-                        <button className="btn btn-link">Login</button>
-                      </Link>
-                    </p>
+                    </h1>
                   </div>
-                </form>
+                  <form
+                    onSubmit={handleSubmit}
+                    className="mt-8 grid  grid-cols-6 gap-6 mb-10"
+                  >
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="FirstName"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Name
+                      </label>
+
+                      <input
+                        type="text"
+                        required
+                        name="name"
+                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Profile Image
+                      </label>
+
+                      <input
+                        type="file"
+                        required
+                        name="image"
+                        accept="image/*"
+                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
+                      />
+                    </div>
+
+                    <div className="col-span-6">
+                      <label
+                        htmlFor="Email"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Email
+                      </label>
+
+                      <input
+                        type="email"
+                        id="Email"
+                        required
+                        name="email"
+                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-6">
+                      <label
+                        htmlFor="Password"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Password
+                      </label>
+
+                      <input
+                        type="password"
+                        id="Password"
+                        required
+                        name="password"
+                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-lg text-gray-700 shadow-sm"
+                      />
+                      <p className="text-red-700">{validation}</p>
+                    </div>
+
+                    <div className="col-span-6">
+                      <label htmlFor="MarketingAccept" className="flex gap-4">
+                        <input
+                          type="checkbox"
+                          name="marketing_accept"
+                          required
+                          className="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+                        />
+
+                        <span className="text-sm text-gray-700">
+                          I want to receive emails about events, product updates
+                          and company announcements.
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="col-span-6">
+                      <p className="text-sm text-gray-500">
+                        By creating an account, you agree to our
+                        <a href="#" className="text-gray-700 underline">
+                          terms and conditions
+                        </a>
+                        and
+                        <a href="#" className="text-gray-700 underline">
+                          privacy policy
+                        </a>
+                        .
+                      </p>
+                    </div>
+
+                    <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-outline"
+                      >
+                        Create an account
+                      </button>
+
+                      <p className="mt-4 text-sm text-gray-500 sm:mt-0">
+                        Already have an account?
+                        <Link to="/login">
+                          <button className="btn btn-link">Login</button>
+                        </Link>
+                      </p>
+                    </div>
+                  </form>
                 </div>
                 <div className="divider">Login with social login</div>
                 <div className="md:flex justify-center items-center mt-10">
