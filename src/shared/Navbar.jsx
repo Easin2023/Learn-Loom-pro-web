@@ -18,7 +18,7 @@ const Navbar = () => {
         <NavLink
           to="/"
           className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "bg-red-200 font-bold mr-4" : ""
+            isPending ? "pending" : isActive ? "bg-red-200 font-bold mr-4" : "mr-4"
           }
         >
           Home
@@ -28,7 +28,7 @@ const Navbar = () => {
         <NavLink
           to="/allClass"
           className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "bg-red-200 font-bold mr-4" : ""
+            isPending ? "pending" : isActive ? "bg-red-200 font-bold mr-4" : "mr-4"
           }
         >
           All Class
@@ -38,7 +38,7 @@ const Navbar = () => {
         <NavLink
           to="/teachOn"
           className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "bg-red-200 font-bold mr-4" : ""
+            isPending ? "pending" : isActive ? "bg-red-200 font-bold mr-4" : "mr-4"
           }
         >
           Teach on Learn Loom

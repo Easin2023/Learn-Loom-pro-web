@@ -1,15 +1,18 @@
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../../shared/Navbar";
 import { useState } from "react";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import useProvider from "../../hooks/useProvider";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Login = () => {
-  const { login } = useProvider();
+  const { login,googleLogin } = useProvider();
   const [validation, setValidation] = useState(''); 
-  const location = useLoaderData();
+  const location = useLocation();
   const navigate = useNavigate();
+  const axios = useAxiosSecure();
+  console.log(location)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +41,7 @@ const Login = () => {
           text: "Your login Success",
           icon: "success"
         });
-       return navigate('/')
+       return navigate(location?.state ? location?.state : '/')
       }else{
         Swal.fire({
           title: `sorry our login is not valid `,
@@ -49,9 +52,55 @@ const Login = () => {
     })
     .catch(error => {
       console.log(error)
+      if(error){
+        Swal.fire({
+          title: `so sorry!`,
+          text: "check the our email and password",
+          icon: "error"
+        });
+      }
     })
 
   };
+
+  const loginGoogle = () => {
+    googleLogin()
+    .then(res => {
+      console.log(res.user)
+      const email = res?.user?.email
+      const displayName = res?.user?.displayName
+      const role = "user";
+      const info = {
+        email,
+        displayName,
+        role
+      }
+      axios.post('/user', info)
+      .then(res => {
+        console.log(res.data)
+        if(res.data.success){
+          Swal.fire({
+            title: `welcome`,
+            text: "Your login Success",
+            icon: "success"
+          });
+          return navigate(location?.state ? location?.state : '/')
+        }else{
+          Swal.fire({
+            title: `welcome`,
+            text: "Your login not a success find the problem",
+            icon: "error"
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
   return (
     <div>
@@ -197,7 +246,7 @@ const Login = () => {
                 </div>
                 <div className="divider">Login with social login</div>
                 <div className="md:flex justify-center items-center mt-10">
-                  <button className="btn rounded-full btn-outline mr-4">
+                  <button onClick={loginGoogle} className="btn rounded-full btn-outline mr-4">
                     <FaGoogle size={30} /> Google
                   </button>
                   <button className="btn rounded-full btn-outline mr-4 btn-primary">

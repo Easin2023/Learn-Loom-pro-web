@@ -1,6 +1,6 @@
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import Navbar from "../../shared/Navbar";
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useProvider from "../../hooks/useProvider";
 import { imageUpload } from "../../hooks/imageUpload";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -8,10 +8,9 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 
 const SignIn = () => {
-  const { signIn,updateUserProfile } = useProvider();
+  const { signIn,updateUserProfile,logout,googleLogin } = useProvider();
   const [validation, setValidation] = useState('');
   const axios = useAxiosSecure(); 
-  const location = useLoaderData();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -23,6 +22,7 @@ const SignIn = () => {
     const password = form.password.value;
     const marketing_accept = form.marketing_accept.value;
     console.log({name, email, password, marketing_accept, image});
+    
 
     if(password.length < 6){
       setValidation('Your password lens is less than six')
@@ -47,7 +47,7 @@ const SignIn = () => {
         email,
         role
       }
-      axios.put('/user', userInfo)
+      axios.post('/user', userInfo)
       .then(res => {
         if(res.status === 200){
           Swal.fire({
@@ -55,7 +55,8 @@ const SignIn = () => {
             text: "Your login Success",
             icon: "success"
           });
-         return navigate('/')
+          logout()
+         return navigate('/login')
         }else{
           Swal.fire({
             title: `welcome ${name}`,
@@ -71,8 +72,46 @@ const SignIn = () => {
     .catch(error => {
       console.log(error)
     })
-
   };
+
+  const loginGoogle = () => {
+    googleLogin()
+    .then(res => {
+      console.log(res.user)
+      const email = res?.user?.email
+      const displayName = res?.user?.displayName
+      const role = "user";
+      const info = {
+        email,
+        displayName,
+        role
+      }
+      axios.post('/user', info)
+      .then(res => {
+        console.log(res.data)
+        if(res.data.success){
+          Swal.fire({
+            title: `welcome`,
+            text: "Your login Success",
+            icon: "success"
+          });
+         return navigate('/')
+        }else{
+          Swal.fire({
+            title: `welcome`,
+            text: "Your login not a success find the problem",
+            icon: "error"
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
   return (
     <div>
@@ -269,7 +308,7 @@ const SignIn = () => {
                 </div>
                 <div className="divider">Login with social login</div>
                 <div className="md:flex justify-center items-center mt-10">
-                  <button className="btn rounded-full btn-outline mr-4">
+                  <button onClick={loginGoogle} className="btn rounded-full btn-outline mr-4">
                     <FaGoogle size={30} /> Google
                   </button>
                   <button className="btn rounded-full btn-outline mr-4 btn-primary">

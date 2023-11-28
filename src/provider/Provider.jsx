@@ -10,12 +10,12 @@ import {
 } from "firebase/auth";
 import { auth } from "../Firebase/Firebase";
 
-export const AuthProvider = createContext(null);
+export const AuthContext = createContext({});
 
-const Provider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const provider = new GoogleAuthProvider();
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
 
   const signIn = (email, password) => {
@@ -54,14 +54,15 @@ const Provider = ({ children }) => {
     user,
     login,
     signIn,
+    loading,
     logout,
     googleLogin,
     updateUserProfile,
   };
 
   return (
-    <AuthProvider.Provider value={userInfo}>{children}</AuthProvider.Provider>
+    <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
   );
 };
 
-export default Provider;
+export default AuthProvider;
