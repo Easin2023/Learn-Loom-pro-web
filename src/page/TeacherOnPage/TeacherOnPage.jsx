@@ -4,9 +4,11 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useProvider from "../../hooks/useProvider";
 import Title from "../../shared/Title";
 import { useState } from "react";
+import { useEffect } from "react";
 
 const TeacherOnPage = () => {
   const [laval, setLaval] = useState("");
+  const [userRole, setUserRole] = useState({})
   const { user } = useProvider();
   const axios = useAxiosSecure();
 
@@ -17,45 +19,55 @@ const TeacherOnPage = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const form = e.target
+    const form = e.target;
     const name = form.name.value;
     const title = form.title.value;
     const email = form.email.value;
     const img = form.image.files[0];
     const category = form.category.value;
     const imageUrl = await imageUpload(img);
-    const image = imageUrl?.data?.display_url
+    const image = imageUrl?.data?.display_url;
     console.log(name, title, email, laval, category, image);
+    const status = "pending";
     const info = {
-      name, 
-      title, 
-      email, 
-      laval, 
+      name,
+      title,
+      email,
+      laval,
       category,
-      image
-    }
-    axios.post("/teacherRequest", info)
-    .then(res => {
-      console.log(res.data)
-      if(res.data.success){
-        Swal.fire({
-          title: `welcome ${name}`,
-          text: "your teacher request Success",
-          icon: "success"
-        });
-      }else{
-        Swal.fire({
-          title: `welcome ${name}`,
-          text: "Your request not a success find the problem",
-          icon: "error"
-        });
-      }
-    })
-    .catch(err => {
-      console.log(err)
-    })
-
+      status,
+      image,
+    };
+    axios
+      .post("/teacherRequest", info)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.success) {
+          Swal.fire({
+            title: `welcome ${name}`,
+            text: "your teacher request Success",
+            icon: "success",
+          });
+        } else {
+          Swal.fire({
+            title: `welcome ${name}`,
+            text: "Your request not a success find the problem",
+            icon: "error",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  useEffect(() => {
+    axios.get(`/user/${user?.email}`).then((res) => {
+      console.log(res.data.user);
+      setUserRole(res?.data?.user)
+    });
+  }, [axios, user?.email]);
+
   return (
     <div>
       <Title title={"Apply The teacher role"} />
@@ -104,9 +116,7 @@ const TeacherOnPage = () => {
               <div>
                 <div className="form-control w-full max-w-full">
                   <label className="label">
-                    <span className="label-text">
-                      select the category
-                    </span>
+                    <span className="label-text">select the category</span>
                   </label>
                   <select name="category" className="select select-bordered">
                     <option value="web_development">click the selected </option>
@@ -180,9 +190,19 @@ const TeacherOnPage = () => {
                 />
               </div>
               <div className="form-control mt-6">
-                <button type="submit" className="btn btn-outline btn-primary">
-                  apply the teacher
-                </button>
+                {userRole?.role === "teacher" ? (
+                  <button
+                    disabled="disabled"
+                    type="submit"
+                    className="btn btn-outline btn-primary"
+                  >
+                    apply the teacher
+                  </button>
+                ) : (
+                  <button type="submit" className="btn btn-outline btn-primary">
+                    apply the teacher
+                  </button>
+                )}
               </div>
             </form>
           </div>

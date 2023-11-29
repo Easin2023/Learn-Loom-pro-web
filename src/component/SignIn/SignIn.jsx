@@ -42,9 +42,11 @@ const SignIn = () => {
     .then(result => {
       console.log(result.user);
       updateUserProfile(name, imageUrl?.data?.display_url)
+      const img = imageUrl?.data?.display_url
       const userInfo = {
         name,
         email,
+        img,
         role
       }
       axios.post('/user', userInfo)
@@ -80,9 +82,11 @@ const SignIn = () => {
       console.log(res.user)
       const email = res?.user?.email
       const displayName = res?.user?.displayName
+      const photoURL = res?.user?.photoURL
       const role = "user";
       const info = {
         email,
+        photoURL,
         displayName,
         role
       }

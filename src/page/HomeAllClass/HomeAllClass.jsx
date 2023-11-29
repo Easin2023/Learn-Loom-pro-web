@@ -2,7 +2,6 @@ import Title from "../../shared/Title";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useEffect, useState } from "react";
 import Course_card from "../../shared/Course_card";
-import { Link } from "react-router-dom";
 
 const HomeAllClass = () => {
      const [allClassData, setAllClassData] = useState([]);

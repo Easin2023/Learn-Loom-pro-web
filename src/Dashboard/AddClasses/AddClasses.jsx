@@ -18,14 +18,15 @@ const AddClasses = () => {
     const description = form.description.value;
     const imageUrl = await imageUpload(image);
     const img = imageUrl?.data?.display_url
+    const status = "pending"
     const addedInfo = {
       title,
       name,
       email,
       price,
       description,
-      img
-      
+      img,
+      status
     };
     console.log(addedInfo)
     console.log(img)
