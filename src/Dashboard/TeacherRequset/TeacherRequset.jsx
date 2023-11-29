@@ -1,18 +1,24 @@
-import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { useQuery } from "@tanstack/react-query";
 
 const TeacherRequest = () => {
   const axios = useAxiosSecure();
-  const [allRequest, setAllRequest] = useState([]);
-  useEffect(() => {
-    axios.get(`/userRequest`).then((res) => {
-      console.log(res.data.request);
-      setAllRequest(res.data.request);
+  // useEffect(() => {
+  //   axios.get(`/userRequest`).then((res) => {
+  //     console.log(res.data.request);
+  //     setAllRequest(res.data.request);
 
-    });
-  }, [axios]);
+  //   });
+  // }, [axios]);
 
+  const {data, refetch} = useQuery({
+    queryKey: ["userRequest"],
+    queryFn: async () => {
+      const getData = await axios.get('/userRequest')
+      return await getData?.data?.request
+    }
+  })
 
   const handleCloseRequest = async e => {
     console.log(e)
@@ -36,12 +42,14 @@ const TeacherRequest = () => {
               text: "Your file has been reject.",
               icon: "success"
             })
+            refetch();
           }else{
             Swal.fire({
               title: "not a reject!",
               text: "it has been reject.",
               icon: "error"
             });
+            refetch()
           }
         } catch (error) {
           console.error("Error updating data:", error.response.data);
@@ -83,7 +91,7 @@ const TeacherRequest = () => {
     <div>
       <div className="overflow-x-auto">
         {
-          allRequest.length > 0 ? <table className="table">
+          data?.length > 0 ? <table className="table">
           {/* head */}
           <thead>
             <tr>
@@ -93,35 +101,35 @@ const TeacherRequest = () => {
               <th>role</th>
             </tr>
           </thead>
-          {allRequest.map((data) => (
-            <tbody key={data._id}>
+          {data?.map((reqData) => (
+            <tbody key={reqData._id}>
               <tr>
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">
                       <div className="mask mask-squircle w-12 h-12">
                         <img
-                          src={data?.image}
+                          src={reqData?.image}
                           alt="Avatar Tailwind CSS Component"
                         />
                       </div>
                     </div>
                     <div>
-                      <div className="font-bold">{data?.name}</div>
+                      <div className="font-bold">{reqData?.name}</div>
                       <div className="text-sm opacity-50">
-                        {data?.category}s
+                        {reqData?.category}s
                       </div>
                     </div>
                   </div>
                 </td>
-                <td>{data?.title}</td>
-                <td>{data?.laval}</td>
+                <td>{reqData?.title}</td>
+                <td>{reqData?.laval}</td>
                 <th>
                   {
-                    data?.status === "reject" ? <button disabled="disabled" className="btn btn-sm btn-error "><span className="text-red-600">rejected</span></button> : <div>
-                    <button onClick={() => handleConform(data?.email)} className="btn mr-2 btn-primary btn-outline btn-xs">
+                    reqData?.status === "reject" ? <button disabled="disabled" className="btn btn-sm btn-error "><span className="text-red-600">rejected</span></button> : <div>
+                    <button onClick={() => handleConform(reqData?.email)} className="btn mr-2 btn-primary btn-outline btn-xs">
                     except teacher
-                    </button> <button onClick={() => handleCloseRequest(data?._id)} className="btn btn-error btn-outline btn-xs">
+                    </button> <button onClick={() => handleCloseRequest(reqData?._id)} className="btn btn-error btn-outline btn-xs">
                     close request
                   </button>
                   </div>

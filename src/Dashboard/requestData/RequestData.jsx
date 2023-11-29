@@ -2,6 +2,7 @@ import useProvider from "../../hooks/useProvider";
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 const RequestData = () => {
   const { user } = useProvider();
@@ -17,8 +18,7 @@ const RequestData = () => {
       setLoading(false);
     });
   }, [axios, user]);
-
-  console.log(user);
+  
   if (loading === "true") {
     return (
       <div className="flex justify-center items-center h-screen">

@@ -11,7 +11,8 @@ const HomeAllClass = () => {
           setLoading(true)
           axios.get('/getAllClass').then(res => {
                console.log(res.data.sites)
-               setAllClassData(res.data.sites)
+               const filter = res.data.sites.filter(data => data.status === "approved")
+               setAllClassData(filter)
                setLoading(false)
           })
      }, [axios])
