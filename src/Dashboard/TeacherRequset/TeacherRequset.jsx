@@ -83,6 +83,7 @@ const TeacherRequest = () => {
             })
             const update = await axios.patch(`/approvedRequest/${e}`)
             console.log(update.data)
+            refetch();
           }
           
         } catch (error) {

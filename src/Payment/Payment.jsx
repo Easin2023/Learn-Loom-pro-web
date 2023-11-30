@@ -26,7 +26,8 @@ const Payment = () => {
         <Title title="your payment" />
         <div className="  h-screen  ">
           <div className="mx-96 p-10 rounded-2xl bg-orange-200">
-            <CheckoutForm price={data?.price} />
+            <h1 className="text-2xl font-semibold ml-4 my-3">My course Price: {data?.price}</h1>
+            <CheckoutForm price={data?.price} params={params?.id} />
           </div>
         </div>
       </Elements>

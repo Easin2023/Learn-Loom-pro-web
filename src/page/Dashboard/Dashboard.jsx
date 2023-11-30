@@ -2,28 +2,38 @@ import { NavLink, Outlet } from "react-router-dom";
 import LogoImage from "../../../public/1-removebg-preview.png";
 import useProvider from "../../hooks/useProvider";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const Dashboard = () => {
-  const { user: users, loading } = useProvider();
-  const [userRole, setUserRole] = useState([]);
+  const { user: users } = useProvider();
   const axiosUse = useAxiosSecure();
 
-  useEffect(() => {
-    axiosUse.get(`/user/${users?.email}`).then((res) => {
-      console.log(res.data.user.role);
-      setUserRole(res.data);
-    });
-  }, [axiosUse, users?.email]);
+  const {data, isLoading} = useQuery({
+    queryKey: [users],
+    queryFn: async () => {
+      const find = await axiosUse.get(`/user/${users?.email}`)
+      return await find?.data
+    }
+  })
+  console.log(data)
 
-  if (loading) {
-    return <span>Loading......</span>;
+  if(isLoading){
+    return <div className="flex justify-center items-center h-screen">
+      <span className="loading loading-bars loading-lg"></span>
+    </div>
   }
+
+  // useEffect(() => {
+  //   axiosUse.get(`/user/${users?.email}`).then((res) => {
+  //     console.log(res.data.user.role);
+  //     setUserRole(res.data);
+  //   });
+  // }, [axiosUse, users?.email]);
 
   return (
     <div className="grid grid-cols-12">
       <div className="col-span-2 bg-red-100 h-screen ">
-        {userRole?.user?.role === "user" && (
+        {data?.user?.role === "user" && (
           <div className="flex h-screen flex-col justify-between border-e bg-red-100">
             <div className="px-4 py-6">
               <img className="w-48" src={LogoImage} alt="" />
@@ -142,7 +152,7 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-        {userRole?.user?.role === "teacher" && (
+        {data?.user?.role === "teacher" && (
           <div className="flex h-screen flex-col justify-between border-e bg-red-100">
             <div className="px-4 py-6">
               <img className="w-48" src={LogoImage} alt="" />
@@ -247,7 +257,7 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-        {userRole?.user?.role === "admin" && (
+        {data?.user?.role === "admin" && (
           <div className="flex h-screen flex-col justify-between border-e bg-red-100">
             <div className="px-4 py-6">
               <img className="w-48" src={LogoImage} alt="" />

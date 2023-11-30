@@ -4,8 +4,9 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import useProvider from "../hooks/useProvider";
 import Swal from "sweetalert2";
 
-const CheckoutForm  = ({price}) => {
+const CheckoutForm  = ({price, params}) => {
 
+  
     console.log(price)
     const [clintSecret, setClintSecret] = useState('');
      const [error, setError] = useState('');
@@ -66,6 +67,17 @@ const CheckoutForm  = ({price}) => {
             title: `success payment`,
             text: `your Transition id:  (${paymentIntent.id})`,
             icon: "success"
+          })
+          const name = user?.displayName || "anonymous"
+          const email = user?.email || "anonymous"
+          const info = {
+            params,
+            name, 
+            email
+          }
+          await axios.post('/paymentDataPost', info)
+          .then(res => {
+            console.log(res.data)
           })
         }
 

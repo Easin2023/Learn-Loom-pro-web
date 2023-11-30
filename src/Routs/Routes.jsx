@@ -18,6 +18,8 @@ import Feedback from "../Dashboard/feedback/Feedback";
 import TeacherOnPage from "../page/TeacherOnPage/TeacherOnPage";
 import RequestData from "../Dashboard/requestData/RequestData";
 import Payment from "../Payment/Payment";
+import MyClassUpdate from "../Dashboard/MyClass/MyClassUpdate";
+import AdminSecure from "../Admin/AdminSecure";
 
 const router = createBrowserRouter([
   {
@@ -46,9 +48,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/payment/:id",
-        element: (
-          <Payment/>
-        )
+        element: <Payment />,
       },
       {
         path: "/teachOn",
@@ -89,16 +89,32 @@ const router = createBrowserRouter([
         element: <MyClass />,
       },
       {
+        path: "/dashboard/myClassUpdate/:id",
+        element: <MyClassUpdate />,
+      },
+      {
         path: "/dashboard/allClasses",
-        element: <AllClasses />,
+        element: (
+          <AdminSecure>
+            <AllClasses />
+          </AdminSecure>
+        ),
       },
       {
         path: "/dashboard/allUser",
-        element: <AllUser />,
+        element: (
+          <AdminSecure>
+            <AllUser />
+          </AdminSecure>
+        ),
       },
       {
         path: "/dashboard/teacherRequest",
-        element: <TeacherRequest />,
+        element: (
+          <AdminSecure>
+            <TeacherRequest />
+          </AdminSecure>
+        ),
       },
       {
         path: "/dashboard/feedback",
@@ -106,8 +122,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard/userRequest",
-        element: <RequestData/>
-      }
+        element: <RequestData />,
+      },
     ],
   },
 ]);
