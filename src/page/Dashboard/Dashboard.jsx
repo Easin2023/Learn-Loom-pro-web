@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import LogoImage from "../../../public/1-removebg-preview.png";
 import useProvider from "../../hooks/useProvider";
+import { Helmet } from "react-helmet";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 
@@ -32,6 +33,9 @@ const Dashboard = () => {
 
   return (
     <div className="grid grid-cols-12">
+      <Helmet>
+                    <title>LearnLoom | Dashboard</title>
+               </Helmet>
       <div className="col-span-2 bg-red-100 h-screen ">
         {data?.user?.role === "user" && (
           <div className="flex h-screen flex-col justify-between border-e bg-red-100">

@@ -1,4 +1,4 @@
-import Course_card from "../../shared/Course_card";
+import { Helmet } from "react-helmet";
 import Review from "../../shared/Review";
 import Teacher from "../../shared/Teacher";
 import Banner from "./Banner/Banner";
@@ -9,6 +9,9 @@ import Collaborators from "./collaborators/Collaborators";
 const Home = () => {
      return (
           <div>
+               <Helmet>
+                    <title>LearnLoom | Home</title>
+               </Helmet>
               <Banner/> 
               <Collaborators/>
               <SortCourse/>

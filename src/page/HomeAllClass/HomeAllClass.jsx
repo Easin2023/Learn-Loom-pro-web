@@ -1,4 +1,5 @@
 import Title from "../../shared/Title";
+import { Helmet } from "react-helmet";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useEffect, useState } from "react";
 import Course_card from "../../shared/Course_card";
@@ -27,6 +28,9 @@ const HomeAllClass = () => {
 
      return (
           <div>
+               <Helmet>
+                    <title>LearnLoom | All Class</title>
+               </Helmet>
                <Title title={"our All class"}/>
                <div className="grid mt-10 grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                     {

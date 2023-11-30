@@ -1,4 +1,5 @@
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
 import { imageUpload } from "../../hooks/imageUpload";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useProvider from "../../hooks/useProvider";
@@ -70,6 +71,9 @@ const TeacherOnPage = () => {
 
   return (
     <div>
+      <Helmet>
+                    <title>LearnLoom | Teacher on LearnLoom</title>
+               </Helmet>
       <Title title={"Apply The teacher role"} />
       <div className="flex justify-center -mt-14 h-screen items-center">
         <div>
