@@ -2,7 +2,6 @@ import useProvider from "../../hooks/useProvider";
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 
 const RequestData = () => {
   const { user } = useProvider();
@@ -18,7 +17,7 @@ const RequestData = () => {
       setLoading(false);
     });
   }, [axios, user]);
-  
+
   if (loading === "true") {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -65,7 +64,7 @@ const RequestData = () => {
                   <td>{data?.title}</td>
                   <td>{data?.laval}</td>
                   <th>
-                    {data?.status ? (
+                    {data?.status === "reject" ? (
                       <button className="btn text-red-600 btn-sm">
                         reject
                       </button>

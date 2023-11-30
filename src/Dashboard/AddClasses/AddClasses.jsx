@@ -1,3 +1,4 @@
+import {useNavigate} from 'react-router-dom';
 import Swal from "sweetalert2";
 import { imageUpload } from "../../hooks/imageUpload";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -7,6 +8,7 @@ import useProvider from "../../hooks/useProvider";
 const AddClasses = () => {
   const { user } = useProvider(); 
   const axiosUse = useAxiosSecure();
+  const navigate = useNavigate();
   const HandleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -39,6 +41,7 @@ const AddClasses = () => {
           icon: "success"
         });
         form.reset();
+        return navigate('/dashboard/myClasses')
       }else{
         Swal.fire({
           title: `sorry check the class information`,

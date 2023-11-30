@@ -206,6 +206,20 @@ const Dashboard = () => {
                     Home
                   </NavLink>
                 </li>
+                <li className="mb-4">
+                  <NavLink
+                    to="/allClass"
+                    className={({ isActive, isPending }) =>
+                      isPending
+                        ? "pending"
+                        : isActive
+                        ? " btn btn-sm btn-active w-full"
+                        : "   btn btn-sm  w-full flex justify-start"
+                    }
+                  >
+                    All Class
+                  </NavLink>
+                </li>
               </ul>
             </div>
 

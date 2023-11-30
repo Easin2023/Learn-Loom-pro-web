@@ -17,6 +17,7 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Feedback from "../Dashboard/feedback/Feedback";
 import TeacherOnPage from "../page/TeacherOnPage/TeacherOnPage";
 import RequestData from "../Dashboard/requestData/RequestData";
+import Payment from "../Payment/Payment";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,12 @@ const router = createBrowserRouter([
             <CardDetail />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "/payment/:id",
+        element: (
+          <Payment/>
+        )
       },
       {
         path: "/teachOn",

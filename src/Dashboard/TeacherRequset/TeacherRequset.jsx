@@ -20,6 +20,8 @@ const TeacherRequest = () => {
     }
   })
 
+  console.log(data);
+
   const handleCloseRequest = async e => {
     console.log(e)
     Swal.fire({
@@ -79,7 +81,10 @@ const TeacherRequest = () => {
               text: "Your success has been approves.",
               icon: "success"
             })
+            const update = await axios.patch(`/approvedRequest/${e}`)
+            console.log(update.data)
           }
+          
         } catch (error) {
           console.error("Error updating data:", error.response.data);
         }
@@ -126,7 +131,18 @@ const TeacherRequest = () => {
                 <td>{reqData?.laval}</td>
                 <th>
                   {
-                    reqData?.status === "reject" ? <button disabled="disabled" className="btn btn-sm btn-error "><span className="text-red-600">rejected</span></button> : <div>
+                    reqData?.status === "reject" && <button disabled="disabled" className="btn btn-sm btn-error "><span className="text-red-600">rejected</span></button>
+                    
+                  }
+                  {
+                    reqData?.status === "approved" && <div>
+                    <button disabled="disabled" className="btn mr-2 btn-primary btn-outline btn-xs">
+                    except teacher
+                    </button> 
+                  </div>
+                  }
+                  {
+                    reqData?.status === "pending" && <div>
                     <button onClick={() => handleConform(reqData?.email)} className="btn mr-2 btn-primary btn-outline btn-xs">
                     except teacher
                     </button> <button onClick={() => handleCloseRequest(reqData?._id)} className="btn btn-error btn-outline btn-xs">

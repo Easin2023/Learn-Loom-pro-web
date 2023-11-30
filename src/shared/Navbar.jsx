@@ -107,7 +107,7 @@ const Navbar = () => {
                       <li className="dark:bg-gray-800 dark:text-gray-50">
                         <Link
                           rel="noopener noreferrer"
-                          to="/dashboard"
+                          to="/dashboard/profile"
                           className="flex items-center p-2 space-x-3 rounded-md"
                         >
                           <svg

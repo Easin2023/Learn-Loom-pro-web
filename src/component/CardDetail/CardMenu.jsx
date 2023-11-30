@@ -1,16 +1,12 @@
 import { FaUsers } from "react-icons/fa";
 import { TbLockDollar } from "react-icons/tb";
 import Title from "../../shared/Title";
+import {Link} from 'react-router-dom';
 
 const CardMenu = ({ data }) => {
-  const {
-     img,
-     totalEnrolment,
-    title,
-    description,
-    price,
-    name,
-  } = data || {};
+  const { _id, img, totalEnrolment, title, description, price, name } = data || {};
+
+  console.log(_id)
 
   const sliceDescription = description?.slice(0, 150);
 
@@ -115,7 +111,9 @@ const CardMenu = ({ data }) => {
               <p className="flex gap-2 items-center">
                 <FaUsers size={20} />
                 <span className="font-semibold">already enroll: </span>
-                <span className="text-orange-500">{totalEnrolment ? totalEnrolment : "no enrollment"}</span>
+                <span className="text-orange-500">
+                  {totalEnrolment ? totalEnrolment : "no enrollment"}
+                </span>
               </p>
               <p className="flex items-center gap-2">
                 <TbLockDollar size={20} />
@@ -123,9 +121,11 @@ const CardMenu = ({ data }) => {
                   price: $<span className="text-orange-600">{price}</span>
                 </span>
               </p>
-              <button className="btn btn-primary w-full btn-outline">
-                Buy Now Course
-              </button>
+              <Link to={`/payment/${_id}`}>
+                <button className="btn btn-primary w-full btn-outline">
+                  Buy Now Course
+                </button>
+              </Link>
             </div>
           </div>
         </div>
