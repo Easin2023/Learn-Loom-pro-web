@@ -20,11 +20,13 @@ import RequestData from "../Dashboard/requestData/RequestData";
 import Payment from "../Payment/Payment";
 import MyClassUpdate from "../Dashboard/MyClass/MyClassUpdate";
 import AdminSecure from "../Admin/AdminSecure";
+import ErrorPage from "../page/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
+    errorElement: <ErrorPage/>,
     children: [
       {
         path: "/",
@@ -71,6 +73,7 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+    errorElement: <ErrorPage/>,
     children: [
       {
         path: "/dashboard/enrollClass",

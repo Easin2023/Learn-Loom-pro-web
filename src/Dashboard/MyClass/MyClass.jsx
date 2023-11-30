@@ -9,16 +9,18 @@ const MyClass = () => {
   const { user } = useProvider();
   const axios = useAxiosSecure();
 
-  console.log(user);
-
+  console.log(user.email);
+  
   const { data, refetch, isLoading } = useQuery({
-    queryKey: [user],
+    queryKey: ["one", user?.email],
     queryFn: async () => {
       const getData = await axios.get(`/getClassOneAndEmail/${user?.email}`);
-      return getData?.data.data;
+      return getData?.data?.data;
     },
   });
-  console.log(data);
+  
+  console.log("data is", data)
+  
 
   const handleDelete = (e) => {
     console.log(e);
@@ -56,6 +58,7 @@ const MyClass = () => {
     });
   };
 
+
   // const handleUpdate = (e) => {
   //   console.log(e);
   // };
@@ -73,7 +76,7 @@ const MyClass = () => {
       <div>
         <Title title={"My added all classes"} />
 
-        <div>
+        <div className="grid grid-cols-2 gap-4">
           {data?.map((allData) => (
             <div
               key={allData._id}
