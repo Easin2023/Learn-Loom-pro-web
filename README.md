@@ -30,3 +30,12 @@ Admin password: 123456@A
 npm install
 ```
 <p>-->After this command is run successfully</p>
+<p>-->After next run this command</p>
+
+```bash
+npm run dev
+```
+<p>-->The project will then run in your browser</p>
+<p>-->After Go To Browser 👇</p> 
+
+http://localhost:5173/
