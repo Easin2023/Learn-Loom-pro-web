@@ -39,3 +39,6 @@ npm run dev
 <p>-->After Go To Browser 👇</p> 
 
 http://localhost:5173/
+
+<h3>Then set up for this project server site</h3>
+<h4>server Link : https://github.com/Easin2023/Learn-Loom-pro-web-server</h4>
